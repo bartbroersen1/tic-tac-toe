@@ -1,17 +1,23 @@
-const Gameboard = function() {
+(function Gameboard () {
     const rows = 3;
     const columns = 5;
     const board = [];
 
     for (let i = 0; i < rows; i++) {
         board[i] = [];
-        for (let j = 0; j < columns; j++); {
-            board[i].push("1");
-        }
+        for (let j = 0; j < columns; j++) {
+            board[i].push("column");
+        };
     }
 
-    return (board);
-}
+    function cell (input) {
+        return 
+    }
+
+
+    return {cell()};
+})();
+
 
 const play = function (player, target) {
     player.tile 
