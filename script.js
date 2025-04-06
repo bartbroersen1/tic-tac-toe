@@ -20,7 +20,7 @@ const Gameboard = (function () {
         return {cellCoord, getCellValue, setCellValue};
     }
 
-    console.log(board);
+    //board.filter(event).map()
     return {board};
 })();
 
@@ -44,7 +44,15 @@ const Players = (function() {
 })();
 
 const Game = (function (player, target) {
-    
+
+    const pickCell = function (e) {
+        //e id
+        board.getCell(/*id*/).getCellValue() ? return 
+        : board.getCell(/*id*/).setCellValue(getPlayerCell());
+    }
+    //Players.playerOne.getActivePlayer() ?
+    Players.playerOne.switchActivePlayer()
+    Players.playerTwo.switchActivePlayer()
 })();
 
 Gameboard.board[1][1].setCellValue("x");
