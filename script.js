@@ -1,33 +1,56 @@
-(function Gameboard () {
+const Gameboard = (function () {
     const rows = 3;
-    const columns = 5;
+    const columns = rows;
     const board = [];
 
     for (let i = 0; i < rows; i++) {
         board[i] = [];
         for (let j = 0; j < columns; j++) {
-            board[i].push("column");
+            const cell = createCell(i, j);
+            board[i].push(cell);
         };
     }
 
-    function cell (input) {
-        return 
+    function createCell (i, j) {
+        const cellCoord = i + ":" + j;
+        let cellValue = 0;
+
+        const getCellValue = () => cellValue;
+        const setCellValue = (value) =>  cellValue = value;
+        return {cellCoord, getCellValue, setCellValue};
     }
 
-
-    return {cell()};
+    console.log(board);
+    return {board};
 })();
 
+const Players = (function() {
+    const createPlayer = function (name, playerCell, activePlayer) {
+        const getName = () => name;
+        const getPlayerCell = () => playerCell;
+        const getActivePlayer = () => activePlayer;
+        const switchActivePlayer = () => activePlayer ? activePlayer = false : activePlayer = true;
 
-const play = function (player, target) {
-    player.tile 
-}
+        let score = 0;
+        const getScore = () => score;
+        const giveScore = () => score++;
+        return {getName, getPlayerCell, getActivePlayer, switchActivePlayer, getScore, giveScore};
+    }
 
-const createPlayer = function (name) {
+    const playerOne = createPlayer("bobby", "x", true);
+    const playerTwo = createPlayer("sjon", "o", false);
 
-    let score = 0;
-    const getScore = () => score;
-    const giveScore = () => score++;
+    return {playerOne, playerTwo};
+})();
 
+const Game = (function (player, target) {
     
-}
+})();
+
+Gameboard.board[1][1].setCellValue("x");
+console.log(Gameboard.board[1][1].cellCoord);
+console.log(Gameboard.board[1][1].getCellValue());
+
+Players.playerOne.switchActivePlayer();
+console.log(Players.playerOne.getPlayerCell());
+console.log(Players.playerOne.getActivePlayer());
