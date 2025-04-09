@@ -12,16 +12,18 @@ const Gameboard = (function () {
     }
 
     function createCell (i, j) {
-        const cellCoord = i + ":" + j;
-        let cellValue = 0;
 
-        const getCellValue = () => cellValue;
-        const setCellValue = (value) =>  cellValue = value;
-        return {cellCoord, getCellValue, setCellValue};
+        //create element with class or id
+        const cellId = i + ":" + j;
+        let cellValue = 0;
+        return {cellId, cellValue};
     }
 
+    const getCellId = (i, j) => board[i][j].cellId;
+    const getCellValue = (i, j) => board[i][j].cellValue;
+    const setCellValue = (i, j, value) => board[i][j].cellValue = value; 
     //board.filter(event).map()
-    return {board};
+    return {getCellId, getCellValue, setCellValue};
 })();
 
 const Players = (function() {
@@ -42,23 +44,28 @@ const Players = (function() {
 
     return {playerOne, playerTwo};
 })();
-
+/*
 const Game = (function (player, target) {
 
-    const pickCell = function (e) {
+    let ActivePlayer
+    
+    //event listener with click
+
+    const chooseCell = function (e) {
         //e id
-        board.getCell(/*id*/).getCellValue() ? return 
-        : board.getCell(/*id*/).setCellValue(getPlayerCell());
+        Gameboard.getCellValue(getCellId()) ? return 
+        : Gameboard.setCellValue(getCellId(), getPlayerCell());
     }
     //Players.playerOne.getActivePlayer() ?
     Players.playerOne.switchActivePlayer()
     Players.playerTwo.switchActivePlayer()
 })();
-
-Gameboard.board[1][1].setCellValue("x");
-console.log(Gameboard.board[1][1].cellCoord);
-console.log(Gameboard.board[1][1].getCellValue());
+*/
+console.log(Gameboard.getCellId(1, 1));
+console.log(Gameboard.getCellValue(1, 1));
+Gameboard.setCellValue(1, 1, "x");
+console.log(Gameboard.getCellValue(1, 1));
 
 Players.playerOne.switchActivePlayer();
-console.log(Players.playerOne.getPlayerCell());
-console.log(Players.playerOne.getActivePlayer());
+//console.log(Players.playerOne.getPlayerCell());
+//console.log(Players.playerOne.getActivePlayer());
