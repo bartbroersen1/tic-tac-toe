@@ -28,8 +28,8 @@ const Gameboard = (function () {
 
     const getCellValue = (row, column) => 
         board[row][column].cell.getAttribute("value");
-    const setCellValue = (row, column, value) => 
-        board[row][column].cell.setAttribute("value", value); 
+    const setCellValue = (row, column, playerValue) => 
+        board[row][column].cell.setAttribute("value", playerValue); 
     //const getCellId = (row, column) => board[row][column].cellId;
     //const getCellValue = (row, column) => board[row][column].cellValue;
     //const setCellValue = (i, j, value) => board[i][j].cellValue = value; 
@@ -38,25 +38,28 @@ const Gameboard = (function () {
 })();
 
 const Players = (function() {
-    const createPlayer = function (name, playerCell, activePlayer) {
+    const createPlayer = function (name, playerValue) {
         const getName = () => name;
-        const getPlayerCell = () => playerCell;
-        const getActivePlayer = () => activePlayer;
-        const switchActivePlayer = () => activePlayer ? activePlayer = false : activePlayer = true;
+        const getPlayerValue = () => playerValue;
 
         let score = 0;
         const getScore = () => score;
         const giveScore = () => score++;
-        return {getName, getPlayerCell, getActivePlayer, switchActivePlayer, getScore, giveScore};
+        return {getName, getPlayerValue, getScore, giveScore};
     }
 
-    const playerOne = createPlayer("bobby", "x", true);
-    const playerTwo = createPlayer("sjon", "o", false);
+    const playerOne = createPlayer("bobby", "x");
+    const playerTwo = createPlayer("sjon", "o");
 
-    return {playerOne, playerTwo};
+    let activePlayer = playerOne;
+    const getActivePlayer = () => activePlayer;
+    const toggleActivePlayer = () => activePlayer === playerOne ? 
+        activePlayer = playerTwo : activePlayer = playerOne;
+
+    return {getActivePlayer, toggleActivePlayer};
 })();
 /*
-const Game = (function (player, target) {
+const Game = (function() {
 
     let ActivePlayer
     
@@ -72,11 +75,15 @@ const Game = (function (player, target) {
     Players.playerTwo.switchActivePlayer()
 })();
 */
-//console.log(Gameboard.getCellId(1, 1));
 console.log(Gameboard.getCellValue(1, 1));
 Gameboard.setCellValue(1, 1, "x");
 console.log(Gameboard.getCellValue(1, 1));
 
-Players.playerOne.switchActivePlayer();
+console.log(Players.getActivePlayer().getPlayerValue());
+console.log(Players.getActivePlayer().getName());
+Players.toggleActivePlayer();
+console.log(Players.getActivePlayer().getName());
+console.log(Players.getActivePlayer().getPlayerValue());
+
 //console.log(Players.playerOne.getPlayerCell());
 //console.log(Players.playerOne.getActivePlayer());
