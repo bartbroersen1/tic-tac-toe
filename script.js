@@ -1,3 +1,5 @@
+
+
 const Gameboard = (function () {
     const rows = 3;
     const columns = rows;
@@ -14,16 +16,25 @@ const Gameboard = (function () {
     function createCell (i, j) {
 
         //create element with class or id
-        const cellId = i + ":" + j;
-        let cellValue = 0;
-        return {cellId, cellValue};
+        const cell = document.createElement("div");
+        cell.setAttribute("row", `${i}`);
+        cell.setAttribute("column", `${j}`);
+        cell.setAttribute("value", "0");
+        //cell.classList.toggle("value")
+        //const cellId = i + ":" + j;
+        //let cellValue = 0;
+        return {cell};
     }
 
-    const getCellId = (i, j) => board[i][j].cellId;
-    const getCellValue = (i, j) => board[i][j].cellValue;
-    const setCellValue = (i, j, value) => board[i][j].cellValue = value; 
+    const getCellValue = (row, column) => 
+        board[row][column].cell.getAttribute("value");
+    const setCellValue = (row, column, value) => 
+        board[row][column].cell.setAttribute("value", value); 
+    //const getCellId = (row, column) => board[row][column].cellId;
+    //const getCellValue = (row, column) => board[row][column].cellValue;
+    //const setCellValue = (i, j, value) => board[i][j].cellValue = value; 
     //board.filter(event).map()
-    return {getCellId, getCellValue, setCellValue};
+    return {getCellValue, setCellValue};
 })();
 
 const Players = (function() {
@@ -61,7 +72,7 @@ const Game = (function (player, target) {
     Players.playerTwo.switchActivePlayer()
 })();
 */
-console.log(Gameboard.getCellId(1, 1));
+//console.log(Gameboard.getCellId(1, 1));
 console.log(Gameboard.getCellValue(1, 1));
 Gameboard.setCellValue(1, 1, "x");
 console.log(Gameboard.getCellValue(1, 1));
