@@ -15,7 +15,6 @@ const Gameboard = (function () {
 
     function createCell (i, j) {
 
-        //create element with class or id
         const cell = document.createElement("div");
         cell.setAttribute("row", `${i}`);
         cell.setAttribute("column", `${j}`);
@@ -26,6 +25,38 @@ const Gameboard = (function () {
         return {cell};
     }
 
+    const winningLines = [];
+
+    for (let k = 0; k < rows; k++) {
+        const winningRows = board[k];
+        const winningColumns = [];
+
+            for (let i = 0; i < rows; i++) {            
+                for (let j = 0; j < columns; j++) {
+                    if (board[i][j].cell.getAttribute("column") === `${k}`) {
+                        winningColumns.push(board[i][j].cell.getAttribute("column"));
+                    };
+                }
+            }
+        
+        winningLines.push(winningRows);
+        winningLines.push(winningColumns);
+    }
+
+    function checkWinningLine () {
+        Array.every(Object.getAttribute("value") === "x")
+        || Array.every(Object.getAttribute("value") === "o")
+        ? true : false;
+    }
+
+    function checkWinner () {
+        for (let i = 0; i < winningLines.length; i++) {
+                winningLines.forEach(checkWinningLine())
+            }
+    }
+
+    console.log(checkWinner());
+
     const getCellValue = (row, column) => 
         board[row][column].cell.getAttribute("value");
     const setCellValue = (row, column, playerValue) => 
@@ -34,6 +65,7 @@ const Gameboard = (function () {
     //const getCellValue = (row, column) => board[row][column].cellValue;
     //const setCellValue = (i, j, value) => board[i][j].cellValue = value; 
     //board.filter(event).map()
+
     return {getCellValue, setCellValue};
 })();
 
