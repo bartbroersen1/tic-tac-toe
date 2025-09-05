@@ -16,16 +16,23 @@ const Gameboard = (function () {
     function createCell (i, j) {
 
         const cell = document.createElement("div");
+        const row = `${i}`;
+        const column = `${j}`;
+        const value = "0";
+        /*
+        const cell = document.createElement("div");
         cell.setAttribute("row", `${i}`);
         cell.setAttribute("column", `${j}`);
         cell.setAttribute("value", "0");
+        */
+
         //cell.classList.toggle("value")
         //const cellId = i + ":" + j;
         //let cellValue = 0;
-        return {cell};
+        return {cell, row, column, value};
     }
 
-    
+    console.log(board)
 
     const winningLines = [];
 
@@ -35,7 +42,7 @@ const Gameboard = (function () {
 
         for (let i = 0; i < rows; i++) {            
             for (let j = 0; j < columns; j++) {
-                if (board[i][j].cell.getAttribute("column") === `${k}`) {
+                if (board[i][j].column === `${k}`) {
                     winningColumns.push(board[i][j]);
                 };
             }
@@ -43,35 +50,29 @@ const Gameboard = (function () {
 
         winningLines.push(winningRows);
         winningLines.push(winningColumns);
+
+        //ADD DIAGONALS TO WINNING LINES
     }
 
     console.log(winningLines);
 
     function checkWinningLines () {
         const completedWinningLines = winningLines.filter(
-            (line) => line[1].getValue() == 0
+            line => line.every(cell => cell.value === "x") 
+            || line.every(cell => cell.value === "o")
         );
-        /*
-        Array.every(cell.getAttribute("value") === "x")
-        || Array.every(cell.getAttribute("value") === "o")
-        ? true : false;
-        */
+        
+        if (completedWinningLines[0]) {
+            return completedWinningLines;
+        };
     }
-
-    /*function checkWinner () {
-        for (let i = 0; i < winningLines.length; i++) {
-                winningLines.forEach(checkWinningLines())
-            }
-    }*/
 
     console.log(checkWinningLines());
 
-    const getValue = () => Element.getAttribute("value");
-
     const getCellValue = (row, column) => 
-        board[row][column].cell.getAttribute("value");
+        board[row][column].value;
     const setCellValue = (row, column, playerValue) => 
-        board[row][column].cell.setAttribute("value", playerValue); 
+        board[row][column].value = playerValue; 
     //const getCellId = (row, column) => board[row][column].cellId;
     //const getCellValue = (row, column) => board[row][column].cellValue;
     //const setCellValue = (i, j, value) => board[i][j].cellValue = value; 
@@ -119,7 +120,7 @@ const Game = (function() {
 })();
 */
 console.log(Gameboard.getCellValue(1, 1));
-Gameboard.setCellValue(1, 1, "x");
+//Gameboard.setCellValue(1, 1, "x");
 console.log(Gameboard.getCellValue(1, 1));
 
 console.log(Players.getActivePlayer().getPlayerValue());
