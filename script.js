@@ -25,37 +25,48 @@ const Gameboard = (function () {
         return {cell};
     }
 
+    
+
     const winningLines = [];
 
     for (let k = 0; k < rows; k++) {
         const winningRows = board[k];
         const winningColumns = [];
 
-            for (let i = 0; i < rows; i++) {            
-                for (let j = 0; j < columns; j++) {
-                    if (board[i][j].cell.getAttribute("column") === `${k}`) {
-                        winningColumns.push(board[i][j].cell.getAttribute("column"));
-                    };
-                }
+        for (let i = 0; i < rows; i++) {            
+            for (let j = 0; j < columns; j++) {
+                if (board[i][j].cell.getAttribute("column") === `${k}`) {
+                    winningColumns.push(board[i][j]);
+                };
             }
-        
+        }
+
         winningLines.push(winningRows);
         winningLines.push(winningColumns);
     }
 
-    function checkWinningLine () {
-        Array.every(Object.getAttribute("value") === "x")
-        || Array.every(Object.getAttribute("value") === "o")
+    console.log(winningLines);
+
+    function checkWinningLines () {
+        const completedWinningLines = winningLines.filter(
+            (line) => line[1].getValue() == 0
+        );
+        /*
+        Array.every(cell.getAttribute("value") === "x")
+        || Array.every(cell.getAttribute("value") === "o")
         ? true : false;
+        */
     }
 
-    function checkWinner () {
+    /*function checkWinner () {
         for (let i = 0; i < winningLines.length; i++) {
-                winningLines.forEach(checkWinningLine())
+                winningLines.forEach(checkWinningLines())
             }
-    }
+    }*/
 
-    console.log(checkWinner());
+    console.log(checkWinningLines());
+
+    const getValue = () => Element.getAttribute("value");
 
     const getCellValue = (row, column) => 
         board[row][column].cell.getAttribute("value");
