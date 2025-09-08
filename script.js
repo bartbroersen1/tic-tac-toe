@@ -65,7 +65,7 @@ const Gameboard = (function () {
     const getCellValue = (row, column) => 
         board[row][column].value;
     const setCellValue = (row, column, playerValue) => 
-        board[row][column].value = playerValue; 
+        board[row][column].value = playerValue;
 
     return {getCellValue, setCellValue, checkWinningLines}; 
 
@@ -83,8 +83,8 @@ const Players = (function() {
         return {getName, getPlayerValue, getScore, giveScore};
     }
 
-    const playerOne = createPlayer(prompt("Player One, please enter your name"), "x");
-    const playerTwo = createPlayer(prompt("Player Two, please enter your name"), "o");
+    const playerOne = createPlayer(prompt("Player one, please enter your name"), "x");
+    const playerTwo = createPlayer(prompt("Player two, please enter your name"), "o");
 
     let activePlayer = playerOne;
     const getActivePlayer = () => activePlayer;
@@ -103,6 +103,8 @@ const Game = (function() {
             +prompt("row"), +prompt("column"), Players.getActivePlayer().getPlayerValue()
         );
 
+        //CHECK IF THE CELL ALREADY HAS A VALUE
+
         if (Gameboard.checkWinningLines()) {
             Players.getActivePlayer().giveScore();
             console.log(`${Players.getActivePlayer().getName()} is the winner`);
@@ -118,3 +120,5 @@ const Game = (function() {
     };
     
 })();
+
+//SCOREBOARD?
