@@ -1,9 +1,10 @@
 
-
 const Gameboard = (function () {
+
     const rows = 3;
     const columns = rows;
     const board = [];
+    const winningLines = [];
 
     for (let i = 0; i < rows; i++) {
         board[i] = [];
@@ -32,10 +33,6 @@ const Gameboard = (function () {
         return {cell, row, column, value};
     }
 
-    console.log(board)
-
-    const winningLines = [];
-
     for (let k = 0; k < rows; k++) {
         const winningRows = board[k];
         const winningColumns = [];
@@ -54,9 +51,7 @@ const Gameboard = (function () {
         //ADD DIAGONALS TO WINNING LINES
     }
 
-    console.log(winningLines);
-
-    function checkWinningLines () {
+    const checkWinningLines = function() {
         const completedWinningLines = winningLines.filter(
             line => line.every(cell => cell.value === "x") 
             || line.every(cell => cell.value === "o")
@@ -67,21 +62,17 @@ const Gameboard = (function () {
         };
     }
 
-    console.log(checkWinningLines());
-
     const getCellValue = (row, column) => 
         board[row][column].value;
     const setCellValue = (row, column, playerValue) => 
         board[row][column].value = playerValue; 
-    //const getCellId = (row, column) => board[row][column].cellId;
-    //const getCellValue = (row, column) => board[row][column].cellValue;
-    //const setCellValue = (i, j, value) => board[i][j].cellValue = value; 
-    //board.filter(event).map()
 
-    return {getCellValue, setCellValue};
+    return {getCellValue, setCellValue, checkWinningLines}; 
+
 })();
 
 const Players = (function() {
+
     const createPlayer = function (name, playerValue) {
         const getName = () => name;
         const getPlayerValue = () => playerValue;
@@ -92,8 +83,8 @@ const Players = (function() {
         return {getName, getPlayerValue, getScore, giveScore};
     }
 
-    const playerOne = createPlayer("bobby", "x");
-    const playerTwo = createPlayer("sjon", "o");
+    const playerOne = createPlayer(prompt("Player One, please enter your name"), "x");
+    const playerTwo = createPlayer(prompt("Player Two, please enter your name"), "o");
 
     let activePlayer = playerOne;
     const getActivePlayer = () => activePlayer;
@@ -101,33 +92,29 @@ const Players = (function() {
         activePlayer = playerTwo : activePlayer = playerOne;
 
     return {getActivePlayer, toggleActivePlayer};
+
 })();
-/*
+
 const Game = (function() {
 
-    let ActivePlayer
+    for (let i = 0; i < 9; i++) {
+
+        Gameboard.setCellValue(
+            +prompt("row"), +prompt("column"), Players.getActivePlayer().getPlayerValue()
+        );
+
+        if (Gameboard.checkWinningLines()) {
+            Players.getActivePlayer().giveScore();
+            console.log(`${Players.getActivePlayer().getName()} is the winner`);
+            console.log(`${Players.getActivePlayer().getName()}'s score: ${Players.getActivePlayer().getScore()}`);
+            return;
+        } else {
+            Players.toggleActivePlayer();
+        };
+    };
+
+    if (!Gameboard.checkWinningLines()) {
+        console.log("It's a tie!")
+    };
     
-    //event listener with click
-
-    const chooseCell = function (e) {
-        //e id
-        Gameboard.getCellValue(getCellId()) ? return 
-        : Gameboard.setCellValue(getCellId(), getPlayerCell());
-    }
-    //Players.playerOne.getActivePlayer() ?
-    Players.playerOne.switchActivePlayer()
-    Players.playerTwo.switchActivePlayer()
 })();
-*/
-console.log(Gameboard.getCellValue(1, 1));
-//Gameboard.setCellValue(1, 1, "x");
-console.log(Gameboard.getCellValue(1, 1));
-
-console.log(Players.getActivePlayer().getPlayerValue());
-console.log(Players.getActivePlayer().getName());
-Players.toggleActivePlayer();
-console.log(Players.getActivePlayer().getName());
-console.log(Players.getActivePlayer().getPlayerValue());
-
-//console.log(Players.playerOne.getPlayerCell());
-//console.log(Players.playerOne.getActivePlayer());
