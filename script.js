@@ -1,25 +1,35 @@
+const cellContainer = document.querySelector("#cellContainer");
 
 const Gameboard = (function () {
 
     const rows = 3;
     const columns = rows;
-    const board = [];
     const winningLines = [];
 
-    for (let i = 0; i < rows; i++) {
-        board[i] = [];
-        for (let j = 0; j < columns; j++) {
-            const cell = createCell(i, j);
-            board[i].push(cell);
-        };
+    const layoutBoard = () => {
+        const board = [];
+    
+        for (let i = 0; i < rows; i++) {
+            board[i] = [];
+            for (let j = 0; j < columns; j++) {
+                const cell = createCell(i, j);
+                board[i].push(cell);
+            };
+        }
+        return board;
     }
-
+    
+    const board = layoutBoard();
+    console.log(board);
+ 
     function createCell (i, j) {
 
         const cell = document.createElement("div");
+        cell.classList.add("cell");
         const row = `${i}`;
         const column = `${j}`;
         const value = 0;
+        cellContainer.appendChild(cell);
         /*
         const cell = document.createElement("div");
         cell.setAttribute("row", `${i}`);
@@ -63,6 +73,7 @@ const Gameboard = (function () {
     winningLines.push(winningDiagonalOne);
     winningLines.push(winningDiagonalTwo);
 
+
     const checkWinningLines = function() {
         const completedWinningLines = winningLines.filter(
             line => line.every(cell => cell.value === "x") 
@@ -92,7 +103,7 @@ const Gameboard = (function () {
     console.log(" ");
     console.log(winningLines);
 
-    return {getCellValue, setCellValue, checkWinningLines};
+    return {layoutBoard, getCellValue, setCellValue, checkWinningLines};
 
 })();
 
@@ -151,6 +162,12 @@ const Gameplay = (function() {
         console.log("It's a tie!")
     };
     
+})();
+
+const DisplayController = (function () {
+
+    Gameboard.layoutBoard();
+
 })();
 
 //SCOREBOARD?

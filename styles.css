@@ -1,0 +1,17 @@
+body {
+    background-color: white;
+}
+
+#cellContainer {
+    display: flex;
+    flex-wrap: wrap;
+    width: 180px;
+}
+
+.cell {
+    background-color: blue;
+    border: solid #000;
+    border-width: thick;
+    width: 50px;
+    height: 50px;
+}
