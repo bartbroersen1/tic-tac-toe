@@ -6,7 +6,7 @@ const Gameboard = (function () {
     const winningLines = [];
 
     const buildWinningLines = () => {
-        
+
         for (let k = 0; k < rows; k++) {
             const winningRow = board[k];
             const winningColumn = [];
@@ -36,7 +36,22 @@ const Gameboard = (function () {
 
         winningLines.push(winningDiagonalOne);
         winningLines.push(winningDiagonalTwo);
+    };
 
+    const checkWinningLines = (reset) => {
+
+        const completedWinningLines = winningLines.filter(
+            line => line.every(cell => cell.value === "x") 
+            || line.every(cell => cell.value === "o")
+        );
+        
+        if (completedWinningLines[0]) {
+            return completedWinningLines;
+        };
+    };
+
+    function createCell (i, j) {
+        return { row: i, column: j, value: null };
     };
 
     const resetBoard = () => {
@@ -57,21 +72,6 @@ const Gameboard = (function () {
     };
     
     resetBoard();
-     
-    function createCell (i, j) {
-        return { row: i, column: j, value: null };
-    };
-    
-    const checkWinningLines = function() {
-        const completedWinningLines = winningLines.filter(
-            line => line.every(cell => cell.value === "x") 
-            || line.every(cell => cell.value === "o")
-        );
-        
-        if (completedWinningLines[0]) {
-            return completedWinningLines;
-        };
-    }
 
     const getBoard = () => board;
     const getCellValue = (row, column) => 
@@ -155,8 +155,6 @@ const Gameplay = (function() {
     
     };
 
-    //playRound();
-
     return {playRound};
     
 })();
@@ -165,6 +163,7 @@ const Gameplay = (function() {
 const DisplayController = (function () {
 
     const cellContainer = document.querySelector("#cellContainer");
+    const restartButton = document.querySelector("#restartBtn");
 
     const updateScreen = () => {
 
@@ -194,8 +193,13 @@ const DisplayController = (function () {
         updateScreen();
     });
 
-    Gameboard.resetBoard();
-    updateScreen();
+    restartButton.addEventListener("click", function (e) {
+
+        Gameboard.resetBoard();
+        updateScreen();
+        console.log(Gameboard.checkWinningLines());
+
+    });
 
 })();
 
