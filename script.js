@@ -4,10 +4,15 @@ const Gameboard = (function () {
 
     const rows = 3;
     const columns = rows;
+    const board = [];
     const winningLines = [];
 
-    const layoutBoard = () => {
-        const board = [];
+    const updateBoard = () => {
+
+        while (cellContainer.lastChild) {
+            cellContainer.removeChild(cellContainer.lastChild);
+        }
+        board.length = 0;
     
         for (let i = 0; i < rows; i++) {
             board[i] = [];
@@ -16,11 +21,11 @@ const Gameboard = (function () {
                 board[i].push(cell);
             };
         }
+
         return board;
     }
     
-    const board = layoutBoard();
-    console.log(board);
+    updateBoard();
  
     function createCell (i, j) {
 
@@ -85,6 +90,7 @@ const Gameboard = (function () {
         };
     }
 
+    const getBoard = () => board;
     const getCellValue = (row, column) => 
         board[row][column].value;
     const setCellValue = function(row, column, playerValue) { 
@@ -103,7 +109,7 @@ const Gameboard = (function () {
     console.log(" ");
     console.log(winningLines);
 
-    return {layoutBoard, getCellValue, setCellValue, checkWinningLines};
+    return {getBoard, updateBoard, getCellValue, setCellValue, checkWinningLines};
 
 })();
 
@@ -131,6 +137,7 @@ const Players = (function() {
 
 })();
 
+/*
 const Gameplay = (function() {
 
     for (let i = 0; i < 9; i++) {
@@ -163,10 +170,13 @@ const Gameplay = (function() {
     };
     
 })();
+*/
 
 const DisplayController = (function () {
 
-    Gameboard.layoutBoard();
+    Gameboard.updateBoard();
+    console.log(Gameboard.getBoard())
+    Gameboard.updateBoard();
 
 })();
 
