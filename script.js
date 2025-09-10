@@ -7,7 +7,7 @@ const Gameboard = (function () {
     const board = [];
     const winningLines = [];
 
-    const updateBoard = () => {
+    const resetBoard = () => {
 
         while (cellContainer.lastChild) {
             cellContainer.removeChild(cellContainer.lastChild);
@@ -25,7 +25,7 @@ const Gameboard = (function () {
         return board;
     }
     
-    updateBoard();
+    resetBoard();
  
     function createCell (i, j) {
 
@@ -109,7 +109,7 @@ const Gameboard = (function () {
     console.log(" ");
     console.log(winningLines);
 
-    return {getBoard, updateBoard, getCellValue, setCellValue, checkWinningLines};
+    return {getBoard, resetBoard, getCellValue, setCellValue, checkWinningLines};
 
 })();
 
@@ -137,46 +137,53 @@ const Players = (function() {
 
 })();
 
-/*
+
 const Gameplay = (function() {
 
-    for (let i = 0; i < 9; i++) {
+    const playGame = () => {
 
-        let row = +prompt("Choose a row");
-        let column = +prompt("Choose a column");
+        for (let i = 0; i < 9; i++) {
 
-        while (Gameboard.getCellValue(row, column)) {
-            row = +prompt("choose another value", "row");
-            column = +prompt("choose another value", "column");
+            let row = +prompt("Choose a row");
+            let column = +prompt("Choose a column");
+
+            while (Gameboard.getCellValue(row, column)) {
+                row = +prompt("choose another value", "row");
+                column = +prompt("choose another value", "column");
+            };
+
+            Gameboard.setCellValue(row, column, Players.getActivePlayer().getPlayerValue());
+
+            if (Gameboard.checkWinningLines()) {
+                Players.getActivePlayer().giveScore();
+                console.log(`${row} : ${column}   ${Gameboard.getCellValue(row, column)}`);
+                console.log(`${Players.getActivePlayer().getName()} is the winner`);
+                console.log(`the winning line is ${Gameboard.checkWinningLines()}`);
+                console.log(`${Players.getActivePlayer().getName()}'s score: ${Players.getActivePlayer().getScore()}`);
+                return;
+            } else {
+                console.log(`${row} : ${column}   ${Gameboard.getCellValue(row, column)}`);
+                Players.toggleActivePlayer();
+            };
         };
 
-        Gameboard.setCellValue(row, column, Players.getActivePlayer().getPlayerValue());
-
-        if (Gameboard.checkWinningLines()) {
-            Players.getActivePlayer().giveScore();
-            console.log(`${row} : ${column}   ${Gameboard.getCellValue(row, column)}`);
-            console.log(`${Players.getActivePlayer().getName()} is the winner`);
-            console.log(`the winning line is ${Gameboard.checkWinningLines()}`);
-            console.log(`${Players.getActivePlayer().getName()}'s score: ${Players.getActivePlayer().getScore()}`);
-            return;
-        } else {
-            console.log(`${row} : ${column}   ${Gameboard.getCellValue(row, column)}`);
-            Players.toggleActivePlayer();
+        if (!Gameboard.checkWinningLines()) {
+            console.log("It's a tie!")
         };
+    
     };
 
-    if (!Gameboard.checkWinningLines()) {
-        console.log("It's a tie!")
-    };
+    playGame();
+    Gameboard.resetBoard();
+    console.log("test");
     
 })();
-*/
+
 
 const DisplayController = (function () {
 
-    Gameboard.updateBoard();
+    Gameboard.resetBoard();
     console.log(Gameboard.getBoard())
-    Gameboard.updateBoard();
 
 })();
 
