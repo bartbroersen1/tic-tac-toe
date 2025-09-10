@@ -1,5 +1,3 @@
-const cellContainer = document.querySelector("#cellContainer");
-
 const Gameboard = (function () {
 
     const rows = 3;
@@ -7,11 +5,42 @@ const Gameboard = (function () {
     const board = [];
     const winningLines = [];
 
+    const buildWinningLines = () => {
+        
+        for (let k = 0; k < rows; k++) {
+            const winningRow = board[k];
+            const winningColumn = [];
+
+            for (let i = 0; i < rows; i++) {            
+                for (let j = 0; j < columns; j++) {
+                    if (board[i][j].column === k) {
+                        winningColumn.push(board[i][j]);
+                    };
+                }
+            }
+
+            winningLines.push(winningRow);
+            winningLines.push(winningColumn);
+
+        }
+
+        const winningDiagonalOne = [];
+        const winningDiagonalTwo = [];
+
+        for (let i = 0; i < rows; i++) {
+                winningDiagonalOne.push(board[i][i]);
+        }
+        for (let i = 0; i < rows; i++) {
+                winningDiagonalTwo.push(board[i][board[i].length - 1 - i]);
+        }
+
+        winningLines.push(winningDiagonalOne);
+        winningLines.push(winningDiagonalTwo);
+
+    };
+
     const resetBoard = () => {
 
-        while (cellContainer.lastChild) {
-            cellContainer.removeChild(cellContainer.lastChild);
-        }
         board.length = 0;
     
         for (let i = 0; i < rows; i++) {
@@ -22,63 +51,17 @@ const Gameboard = (function () {
             };
         }
 
+        buildWinningLines();
+
         return board;
-    }
+    };
     
     resetBoard();
- 
+     
     function createCell (i, j) {
-
-        const cell = document.createElement("div");
-        cell.classList.add("cell");
-        const row = `${i}`;
-        const column = `${j}`;
-        const value = 0;
-        cellContainer.appendChild(cell);
-        /*
-        const cell = document.createElement("div");
-        cell.setAttribute("row", `${i}`);
-        cell.setAttribute("column", `${j}`);
-        cell.setAttribute("value", "0");
-        */
-
-        //cell.classList.toggle("value")
-        //const cellId = i + ":" + j;
-        //let cellValue = 0;
-        return {cell, row, column, value};
-    }
-
-    for (let k = 0; k < rows; k++) {
-        const winningRow = board[k];
-        const winningColumn = [];
-
-        for (let i = 0; i < rows; i++) {            
-            for (let j = 0; j < columns; j++) {
-                if (board[i][j].column === `${k}`) {
-                    winningColumn.push(board[i][j]);
-                };
-            }
-        }
-
-        winningLines.push(winningRow);
-        winningLines.push(winningColumn);
-
-    }
-
-    const winningDiagonalOne = [];
-    const winningDiagonalTwo = [];
-
-    for (let i = 0; i < rows; i++) {
-            winningDiagonalOne.push(board[i][i]);
-    }
-    for (let i = 0; i < rows; i++) {
-            winningDiagonalTwo.push(board[i][board[i].length - 1 - i]);
-    }
-
-    winningLines.push(winningDiagonalOne);
-    winningLines.push(winningDiagonalTwo);
-
-
+        return { row: i, column: j, value: null };
+    };
+    
     const checkWinningLines = function() {
         const completedWinningLines = winningLines.filter(
             line => line.every(cell => cell.value === "x") 
@@ -93,8 +76,8 @@ const Gameboard = (function () {
     const getBoard = () => board;
     const getCellValue = (row, column) => 
         board[row][column].value;
-    const setCellValue = function(row, column, playerValue) { 
-        if (board[row][column].value === 0) {
+    const setCellValue = (row, column, playerValue) => { 
+        if (board[row][column].value === null) {
             return board[row][column].value = playerValue;
         } else {
             return;
@@ -107,7 +90,7 @@ const Gameboard = (function () {
     console.log(" ");
     console.log(" ");
     console.log(" ");
-    console.log(winningLines);
+    console.log(getBoard());
 
     return {getBoard, resetBoard, getCellValue, setCellValue, checkWinningLines};
 
@@ -140,16 +123,15 @@ const Players = (function() {
 
 const Gameplay = (function() {
 
-    const playGame = () => {
+    const playRound = (selectedRow, selectedColumn) => {
 
-        for (let i = 0; i < 9; i++) {
+        //for (let i = 0; i < 9; i++) {
 
-            let row = +prompt("Choose a row");
-            let column = +prompt("Choose a column");
+            const row = selectedRow;
+            const column = selectedColumn;
 
-            while (Gameboard.getCellValue(row, column)) {
-                row = +prompt("choose another value", "row");
-                column = +prompt("choose another value", "column");
+            if (Gameboard.getCellValue(row, column) !== null) {
+                return;
             };
 
             Gameboard.setCellValue(row, column, Players.getActivePlayer().getPlayerValue());
@@ -165,25 +147,55 @@ const Gameplay = (function() {
                 console.log(`${row} : ${column}   ${Gameboard.getCellValue(row, column)}`);
                 Players.toggleActivePlayer();
             };
-        };
+        //};
 
-        if (!Gameboard.checkWinningLines()) {
+        /*if (!Gameboard.checkWinningLines()) {
             console.log("It's a tie!")
-        };
+        };*/
     
     };
 
-    playGame();
-    Gameboard.resetBoard();
-    console.log("test");
+    //playRound();
+
+    return {playRound};
     
 })();
 
 
 const DisplayController = (function () {
 
+    const cellContainer = document.querySelector("#cellContainer");
+
+    const updateScreen = () => {
+
+        while (cellContainer.lastChild) {
+            cellContainer.removeChild(cellContainer.lastChild);
+        }
+
+        Gameboard.getBoard().forEach((row, rowIndex) => {
+            row.forEach((cell, columnIndex) => {
+
+                const cellButton = document.createElement("button");
+                cellButton.classList.add("cell");
+                cellButton.dataset.row = rowIndex;
+                cellButton.dataset.column = columnIndex;
+                cellButton.textContent = cell.value;
+                cellContainer.appendChild(cellButton);
+            })
+        })
+    };
+
+    cellContainer.addEventListener("click", function (e) {
+
+        const selectedRow = +e.target.dataset.row;
+        const selectedColumn = +e.target.dataset.column;
+
+        Gameplay.playRound(selectedRow, selectedColumn);
+        updateScreen();
+    });
+
     Gameboard.resetBoard();
-    console.log(Gameboard.getBoard())
+    updateScreen();
 
 })();
 
