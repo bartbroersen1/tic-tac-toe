@@ -4,8 +4,10 @@ const Gameboard = (function () {
     const columns = rows;
     const board = [];
     const winningLines = [];
+    const completedWinningLines = [];
 
     const buildWinningLines = () => {
+        winningLines.length = 0;
 
         for (let k = 0; k < rows; k++) {
             const winningRow = board[k];
@@ -38,12 +40,14 @@ const Gameboard = (function () {
         winningLines.push(winningDiagonalTwo);
     };
 
-    const checkWinningLines = (reset) => {
+    const checkWinningLines = () => {
+        completedWinningLines.length = 0;
 
-        const completedWinningLines = winningLines.filter(
+        const matches = winningLines.filter(
             line => line.every(cell => cell.value === "x") 
             || line.every(cell => cell.value === "o")
         );
+        completedWinningLines.push(...matches);
         
         if (completedWinningLines[0]) {
             return completedWinningLines;
@@ -55,7 +59,6 @@ const Gameboard = (function () {
     };
 
     const resetBoard = () => {
-
         board.length = 0;
     
         for (let i = 0; i < rows; i++) {
@@ -106,7 +109,7 @@ const Players = (function() {
         const getScore = () => score;
         const giveScore = () => score++;
         return {getName, getPlayerValue, getScore, giveScore};
-    }
+    };
 
     const playerOne = createPlayer(/*prompt("Player one, please enter your name")*/"bart", "x");
     const playerTwo = createPlayer(/*prompt("Player two, please enter your name")*/"sjon", "o");
@@ -132,7 +135,9 @@ const Gameplay = (function() {
 
             if (Gameboard.getCellValue(row, column) !== null) {
                 return;
-            };
+            } else if (Gameboard.checkWinningLines()) {
+                return;
+            }
 
             Gameboard.setCellValue(row, column, Players.getActivePlayer().getPlayerValue());
 
@@ -140,7 +145,7 @@ const Gameplay = (function() {
                 Players.getActivePlayer().giveScore();
                 console.log(`${row} : ${column}   ${Gameboard.getCellValue(row, column)}`);
                 console.log(`${Players.getActivePlayer().getName()} is the winner`);
-                console.log(`the winning line is ${Gameboard.checkWinningLines()}`);
+                //console.log(`the winning line is ${Gameboard.checkWinningLines()}`);
                 console.log(`${Players.getActivePlayer().getName()}'s score: ${Players.getActivePlayer().getScore()}`);
                 return;
             } else {
@@ -184,6 +189,8 @@ const DisplayController = (function () {
         })
     };
 
+    //updateScreen();
+
     cellContainer.addEventListener("click", function (e) {
 
         const selectedRow = +e.target.dataset.row;
@@ -196,9 +203,8 @@ const DisplayController = (function () {
     restartButton.addEventListener("click", function (e) {
 
         Gameboard.resetBoard();
+        restartButton.textContent = "Restart";
         updateScreen();
-        console.log(Gameboard.checkWinningLines());
-
     });
 
 })();
