@@ -1,6 +1,6 @@
 const Gameboard = (function () {
 
-    const rows = +prompt("rows?");
+    const rows = 3;
     const columns = rows;
     const board = [];
     const winningLines = [];
@@ -103,14 +103,11 @@ const Players = (function() {
         const getName = () => name;
         const getPlayerValue = () => playerValue;
 
-        let score = 0;
-        const getScore = () => score;
-        const giveScore = () => score++;
-        return {getName, getPlayerValue, getScore, giveScore};
+        return {getName, getPlayerValue};
     };
 
-    const playerOne = createPlayer(/*prompt("Player one, please enter your name")*/"bart", "x");
-    const playerTwo = createPlayer(/*prompt("Player two, please enter your name")*/"sjon", "o");
+    const playerOne = createPlayer(prompt("Player one, please enter your name"), "x");
+    const playerTwo = createPlayer(prompt("Player two, please enter your name"), "o");
 
     let activePlayer = playerOne;
     const getActivePlayer = () => activePlayer;
@@ -123,8 +120,6 @@ const Players = (function() {
 
 
 const Gameplay = (function() {
-
-    //Gameboard.resetBoard();
 
     const playRound = (selectedRow, selectedColumn) => {
 
@@ -140,18 +135,16 @@ const Gameplay = (function() {
         Gameboard.setCellValue(row, column, Players.getActivePlayer().getPlayerValue());
 
         if (Gameboard.checkWinningLines()) {
-            Players.getActivePlayer().giveScore();
-            console.log(`${row} : ${column}   ${Gameboard.getCellValue(row, column)}`);
-            console.log(`${Players.getActivePlayer().getName()} is the winner`);
-            //console.log(`the winning line is ${Gameboard.checkWinningLines()}`);
-            console.log(`${Players.getActivePlayer().getName()}'s score: ${Players.getActivePlayer().getScore()}`);
+            DisplayController.message.textContent = `${Players.getActivePlayer().getName()} is the winner!`;
+            Players.toggleActivePlayer();
             return;
         } else if (Gameboard.checkForTie()) {
-            console.log("It's a tie!");
+            DisplayController.message.textContent = "It's a tie! Press restart";
+            Players.toggleActivePlayer();
             return;
         } else {
-            console.log(`${row} : ${column}   ${Gameboard.getCellValue(row, column)}`);
             Players.toggleActivePlayer();
+            DisplayController.message.textContent = `${Players.getActivePlayer().getName()}, it's your turn`;
         };
     
     };
@@ -165,6 +158,7 @@ const DisplayController = (function () {
 
     const cellContainer = document.querySelector("#cellContainer");
     const restartButton = document.querySelector("#restartBtn");
+    const message = document.querySelector("#message");
 
     const updateScreen = () => {
 
@@ -198,9 +192,10 @@ const DisplayController = (function () {
 
         Gameboard.resetBoard();
         restartButton.textContent = "Restart";
+        message.textContent = `${Players.getActivePlayer().getName()} has the first turn`
         updateScreen();
     });
 
+    return {message};
+    
 })();
-
-//SCOREBOARD?

@@ -1,17 +1,106 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Centering the content */
 body {
-    background-color: white;
-}
-
-#cellContainer {
+    background-color: #f0f4f8;
     display: flex;
-    flex-wrap: wrap;
-    width: 180px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
 }
 
+/* Title */
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+}
+
+/* Start button */
+#restartBtn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    background-color: #0077ff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#restartBtn:hover {
+    background-color: #005fcc;
+}
+
+/* Game message */
+#message {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    color: #555;
+}
+
+/* Grid container */
+#cellContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 10px;
+}
+
+/* Individual cells */
 .cell {
-    background-color: lightblue;
-    border: solid #000;
-    border-width: thick;
-    width: 50px;
-    height: 50px;
+    width: 100px;
+    height: 100px;
+    background-color: white;
+    border: 2px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.cell:hover {
+    background-color: #e9f1ff;
+    transform: scale(1.05);
+}
+
+/* Disable pointer events if cell is filled */
+.cell.filled {
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Optional: Winning cells highlight */
+.cell.win {
+    background-color: #d4edda;
+    border-color: #28a745;
+    color: #155724;
+}
+
+/* Responsive tweaks */
+@media (max-width: 500px) {
+    #cellContainer {
+        grid-template-columns: repeat(3, 80px);
+        grid-template-rows: repeat(3, 80px);
+    }
+
+    .cell {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
 }
