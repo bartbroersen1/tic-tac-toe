@@ -1,6 +1,6 @@
 const Gameboard = (function () {
 
-    const rows = 3;
+    const rows = +prompt("rows?");
     const columns = rows;
     const board = [];
     const winningLines = [];
@@ -73,8 +73,12 @@ const Gameboard = (function () {
 
         return board;
     };
-    
-    resetBoard();
+
+    const checkForTie = () => {
+        return board.every(row =>
+            row.every(cell => cell.value !== null)
+        );
+    };
 
     const getBoard = () => board;
     const getCellValue = (row, column) => 
@@ -87,15 +91,9 @@ const Gameboard = (function () {
         }
     };
 
-    console.log(" ");
-    console.log(" ");
-    console.log(" ");    
-    console.log(" ");
-    console.log(" ");
-    console.log(" ");
-    console.log(getBoard());
-
-    return {getBoard, resetBoard, getCellValue, setCellValue, checkWinningLines};
+    return {getBoard, resetBoard, getCellValue, setCellValue, 
+        checkWinningLines, checkForTie
+    };
 
 })();
 
@@ -126,37 +124,35 @@ const Players = (function() {
 
 const Gameplay = (function() {
 
+    //Gameboard.resetBoard();
+
     const playRound = (selectedRow, selectedColumn) => {
 
-        //for (let i = 0; i < 9; i++) {
+        const row = selectedRow;
+        const column = selectedColumn;
 
-            const row = selectedRow;
-            const column = selectedColumn;
+        if (Gameboard.getCellValue(row, column) !== null) {
+            return;
+        } else if (Gameboard.checkWinningLines()) {
+            return;
+        };
 
-            if (Gameboard.getCellValue(row, column) !== null) {
-                return;
-            } else if (Gameboard.checkWinningLines()) {
-                return;
-            }
+        Gameboard.setCellValue(row, column, Players.getActivePlayer().getPlayerValue());
 
-            Gameboard.setCellValue(row, column, Players.getActivePlayer().getPlayerValue());
-
-            if (Gameboard.checkWinningLines()) {
-                Players.getActivePlayer().giveScore();
-                console.log(`${row} : ${column}   ${Gameboard.getCellValue(row, column)}`);
-                console.log(`${Players.getActivePlayer().getName()} is the winner`);
-                //console.log(`the winning line is ${Gameboard.checkWinningLines()}`);
-                console.log(`${Players.getActivePlayer().getName()}'s score: ${Players.getActivePlayer().getScore()}`);
-                return;
-            } else {
-                console.log(`${row} : ${column}   ${Gameboard.getCellValue(row, column)}`);
-                Players.toggleActivePlayer();
-            };
-        //};
-
-        /*if (!Gameboard.checkWinningLines()) {
-            console.log("It's a tie!")
-        };*/
+        if (Gameboard.checkWinningLines()) {
+            Players.getActivePlayer().giveScore();
+            console.log(`${row} : ${column}   ${Gameboard.getCellValue(row, column)}`);
+            console.log(`${Players.getActivePlayer().getName()} is the winner`);
+            //console.log(`the winning line is ${Gameboard.checkWinningLines()}`);
+            console.log(`${Players.getActivePlayer().getName()}'s score: ${Players.getActivePlayer().getScore()}`);
+            return;
+        } else if (Gameboard.checkForTie()) {
+            console.log("It's a tie!");
+            return;
+        } else {
+            console.log(`${row} : ${column}   ${Gameboard.getCellValue(row, column)}`);
+            Players.toggleActivePlayer();
+        };
     
     };
 
@@ -188,8 +184,6 @@ const DisplayController = (function () {
             })
         })
     };
-
-    //updateScreen();
 
     cellContainer.addEventListener("click", function (e) {
 
